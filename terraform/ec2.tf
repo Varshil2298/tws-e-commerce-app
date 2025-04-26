@@ -12,8 +12,8 @@ data "aws_ami" "os_image" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "terra-automate-key"
-  public_key = file("terra-key.pub")
+  key_name   = "devops-demo-kp-2"
+  public_key = file("devops-demo-kp-2.pub")
 }
 
 resource "aws_default_vpc" "default" {
