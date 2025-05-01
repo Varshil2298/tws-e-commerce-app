@@ -69,8 +69,12 @@ pipeline {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-key']]) {
                     script {
                         sh '''
+                            echo "AWS_ECR_REPO_NAME: $AWS_ECR_REPO_NAME"
+                            echo "REPOSITORY_URI: $REPOSITORY_URI"
+                            echo "BUILD_NUMBER: $BUILD_NUMBER"
                             aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
                             docker login --username AWS --password-stdin $REPOSITORY_URI
+                            echo "docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER"
                             docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER
                             docker push $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER
                         '''
