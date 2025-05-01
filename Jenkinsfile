@@ -68,21 +68,14 @@ pipeline {
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-key']]) {
                    script {
-                       def repositoryUri = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                       def imageTag = "${repositoryUri}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
-
-                       echo "Logging in to AWS ECR..."
-                       sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${repositoryUri}"
-
-                       echo "Tagging Docker image as ${imageTag}..."
-                       sh "docker tag ${AWS_ECR_REPO_NAME} ${imageTag}"
-
-                       echo "Pushing Docker image to ECR..."
-                       sh "docker push ${imageTag}"
+                        sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}"
+                        echo "docker tag ${AWS_ECR_REPO_NAME}${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
+                        sh "docker tag ${AWS_ECR_REPO_NAME} ${REPOSITORY_URI}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
+                }
             }
         }
     }
-}
     
         stage("TRIVY Image Scan") {
             steps {
@@ -94,7 +87,7 @@ pipeline {
                 git branch: 'master', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/tws-e-commerce-app.git'
             }
         }
-        
+
         stage('Update K8s Manifest with Image') {
             steps {
                 dir('kubernetes') {
