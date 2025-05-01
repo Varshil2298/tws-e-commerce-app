@@ -72,13 +72,15 @@ pipeline {
                             echo "AWS_ECR_REPO_NAME: $AWS_ECR_REPO_NAME"
                             echo "REPOSITORY_URI: $REPOSITORY_URI"
                             echo "BUILD_NUMBER: $BUILD_NUMBER"
+                            
                             aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
                             docker login --username AWS --password-stdin $REPOSITORY_URI
-                            FULL_IMAGE_NAME="${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
-                            echo "docker tag $AWS_ECR_REPO_NAME $FULL_IMAGE_NAME"
-                            docker tag $AWS_ECR_REPO_NAME $FULL_IMAGE_NAME
-                            echo "docker push $FULL_IMAGE_NAME"
-                            docker push $FULL_IMAGE_NAME
+
+                            echo "docker tag $AWS_ECR_REPO_NAME ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
+                            docker tag $AWS_ECR_REPO_NAME ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER
+
+                            echo "docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
+                            docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER
                         '''
                     }
                }
