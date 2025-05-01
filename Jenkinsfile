@@ -53,17 +53,17 @@ pipeline {
         //         }
         //     }
         // }
-        stage("Docker Image Build") {
-            steps {
-                script {
-                    dir('') {
-                            sh 'docker system prune -f'
-                            sh 'docker container prune -f'
-                            sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
-                    }
-                }
-            }
-        }
+        // stage("Docker Image Build") {
+        //     steps {
+        //         script {
+        //             dir('') {
+        //                     sh 'docker system prune -f'
+        //                     sh 'docker container prune -f'
+        //                     sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
+        //             }
+        //         }
+        //     }
+        // }
         stage("ECR Image Pushing") {
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-key']]) {
@@ -76,8 +76,8 @@ pipeline {
                             aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
                             docker login --username AWS --password-stdin $REPOSITORY_URI
 
-                            echo "docker tag $AWS_ECR_REPO_NAME ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
-                            docker tag $AWS_ECR_REPO_NAME "${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
+                            echo "docker tag ${AWS_ECR_REPO_NAME} ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
+                            docker tag ${AWS_ECR_REPO_NAME} "${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
 
                             echo "docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
                             docker push "${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:$BUILD_NUMBER"
