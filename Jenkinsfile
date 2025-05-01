@@ -7,7 +7,7 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
         AWS_ECR_REPO_NAME = credentials('ECR_REPO')
         AWS_DEFAULT_REGION = 'ap-south-1'
-        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
     }
     stages {
         stage('Cleaning Workspace') {
@@ -74,9 +74,9 @@ pipeline {
                             echo "BUILD_NUMBER: $BUILD_NUMBER"
                             aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
                             docker login --username AWS --password-stdin $REPOSITORY_URI
-                            echo "docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER"
-                            docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER
-                            docker push $REPOSITORY_URI/$AWS_ECR_REPO_NAME:$BUILD_NUMBER
+                            echo "docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI$AWS_ECR_REPO_NAME:$BUILD_NUMBER"
+                            docker tag $AWS_ECR_REPO_NAME $REPOSITORY_URI $AWS_ECR_REPO_NAME:$BUILD_NUMBER
+                            docker push $REPOSITORY_URI $AWS_ECR_REPO_NAME:$BUILD_NUMBER
                         '''
                     }
                }
