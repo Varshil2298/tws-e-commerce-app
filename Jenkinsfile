@@ -53,17 +53,17 @@ pipeline {
         //         }
         //     }
         // }
-        // stage("Docker Image Build") {
-        //     steps {
-        //         script {
-        //             dir('') {
-        //                     sh 'docker system prune -f'
-        //                     sh 'docker container prune -f'
-        //                     sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
-        //             }
-        //         }
-        //     }
-        // }
+        stage("Docker Image Build") {
+            steps {
+                script {
+                    dir('') {
+                            sh 'docker system prune -f'
+                            sh 'docker container prune -f'
+                            sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
+                    }
+                }
+            }
+        }
         stage("ECR Image Pushing") {
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-key']]) {
