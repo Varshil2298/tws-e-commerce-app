@@ -8,12 +8,9 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-  #  alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=60
-  #  alb.ingress.kubernetes.io/group.name: easyshop-group
 spec:
   rules:
-    - host: easyshop.letsdeployit.com
-      http:
+    - http: 
         paths:
           - path: /
             pathType: Prefix
@@ -22,3 +19,4 @@ spec:
                 name: easyshop-service
                 port:
                   number: 80
+
