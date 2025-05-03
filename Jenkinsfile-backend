@@ -56,10 +56,10 @@ pipeline {
         stage("Docker Image Build") {
             steps {
                 script {
-                    dir('scripts') {
+                    dir('') {
                             sh 'docker system prune -f'
                             sh 'docker container prune -f'
-                            sh "docker build -t ${AWS_ECR_REPO_NAME} -f Dockerfile.migration ."
+                            sh "docker build -t ${AWS_ECR_REPO_NAME} -f scripts/Dockerfile.migration ."
                     }
                 }
             }
