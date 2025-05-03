@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: easyshop
-          image: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/easyshop:22
+          image: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/easyshop:24
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
