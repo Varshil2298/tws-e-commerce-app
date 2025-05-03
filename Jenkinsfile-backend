@@ -100,11 +100,11 @@ pipeline {
 
         stage('Update K8s Manifest with Image') {
             steps {
-                dir('kubernetes') {
+                dir('kubernetes/EKS/easyshop-backend') {
                     script {
                         def imageTag = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
-                        echo "Updating image in 08-easyshop-deployment.yaml..."
-                        sh "sed -i 's|image: .*|image: ${imageTag}|' 08-easyshop-deployment.yaml"
+                        echo "Updating image in 12-migration-job.yaml..."
+                        sh "sed -i 's|image: .*|image: ${imageTag}|' 12-migration-job.yaml"
                         echo "Updated image to ${imageTag}"
                     }
                 }
