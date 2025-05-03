@@ -20,6 +20,22 @@ pipeline {
                 git branch: 'master', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/tws-e-commerce-app.git'
             }
         }
+
+        stage('Skip if No Frontend Changes') {
+            steps {
+                script {
+                    sh 'git fetch --unshallow || true'
+                    def changes = sh(script: "git diff --name-only HEAD HEAD~1", returnStdout: true).trim()
+                    if (!changes.split('\n').any { it.startsWith('frontend/') }) {
+                        echo "No changes in the frontend directory. Skipping pipeline..."
+                        currentBuild.result = 'NOT_BUILT'
+                        error("Stopping build - not a frontend change.")
+                    } else {
+                        echo "Frontend changes detected. Proceeding..."
+                    }
+                }
+            }
+        }
         // stage('Sonarqube Analysis') {
         //     steps {
         //         dir('vote') {
@@ -100,7 +116,7 @@ pipeline {
 
         stage('Update K8s Manifest with Image') {
             steps {
-                dir('kubernetes') {
+                dir('kubernetes/EKS/easyshop-frontend') {
                     script {
                         def imageTag = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
                         echo "Updating image in 08-easyshop-deployment.yaml..."
@@ -117,7 +133,7 @@ pipeline {
                 GIT_USER_NAME = "Varshil2298"
     }
             steps {
-                dir('kubernetes') {
+                dir('kubernetes/EKS/easyshop-frontend') {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git config user.email 'devopstest@gmail.com'
