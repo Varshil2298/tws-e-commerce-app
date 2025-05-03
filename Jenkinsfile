@@ -20,22 +20,6 @@ pipeline {
                 git branch: 'master', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/tws-e-commerce-app.git'
             }
         }
-
-        stage('Skip if No Frontend Changes') {
-            steps {
-                script {
-                    sh 'git fetch --unshallow || true'
-                    def changes = sh(script: "git diff --name-only HEAD HEAD~1", returnStdout: true).trim()
-                    if (!changes.split('\n').any { it.startsWith('frontend/') }) {
-                        echo "No changes in the frontend directory. Skipping pipeline..."
-                        currentBuild.result = 'NOT_BUILT'
-                        error("Stopping build - not a frontend change.")
-                    } else {
-                        echo "Frontend changes detected. Proceeding..."
-                    }
-                }
-            }
-        }
         // stage('Sonarqube Analysis') {
         //     steps {
         //         dir('vote') {
