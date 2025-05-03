@@ -122,7 +122,7 @@ pipeline {
                         sh '''
                             git config user.email 'devopstest@gmail.com'
                             git config user.name 'Varshil2298'
-                            git add 08-easyshop-deployment.yaml
+                            git add 12-migration-job.yaml
                             git commit -m "Update Kubernetes manifest with image tag ${BUILD_NUMBER}"
                             git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
